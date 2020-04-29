@@ -1,0 +1,26 @@
+version: '3'
+services:
+  users_database:
+    image: mysql:5.7
+    networks:
+       - spring-boot-mysql-network
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'users_database'
+      MYSQL_ROOT_PASSWORD: 'root'
+    ports:
+      - '3306:3306'
+  app:
+    build: .
+    ports:
+      - 8080:8080
+    networks:
+      - spring-boot-mysql-network
+    depends_on:
+      - users_database
+    volumes:
+      - ./target:/build/target
+
+networks:
+  spring-boot-mysql-network:
+    driver: bridge
